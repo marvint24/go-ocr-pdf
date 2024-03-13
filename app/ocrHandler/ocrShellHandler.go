@@ -73,7 +73,7 @@ func executeOcrmypdf(languages string, oldPath string, newPath string) error {
 	slog.Debug(fmt.Sprintf("Running: ocrmypdf -l %q %q %q", languages, oldPath, newPath))
 	cmd := exec.Command("ocrmypdf", "-l", languages, oldPath, newPath)
 	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
+	cmd.Stdout = &stdout //TODO: ocrmypdf output seams to only go to stderr
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 	slog.Debug(fmt.Sprintf("Output (stdout) from ocrmypdf: %q", stdout.String()))
