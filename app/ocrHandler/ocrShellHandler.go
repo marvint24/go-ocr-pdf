@@ -84,20 +84,6 @@ func executeOcrmypdf(languages string, oldPath string, newPath string) error {
 	return nil
 }
 
-func (handler *OCRShellHandler) getFiles() ([]string, error) {
-	files := []string{}
-	dirEntries, err := os.ReadDir(handler.workingDir)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, entry := range dirEntries {
-		files = append(files, entry.Name())
-	}
-
-	return files, nil
-}
-
 func extractLanguages(filename string) (era string, resr string) {
 	start := strings.Index(filename, "-")
 	end := strings.Index(filename[start+1:], "-")
@@ -119,28 +105,10 @@ func exists(path string) bool {
 func (handler *OCRShellHandler) Start() {
 	slog.Debug("Starting OCRShellHandler")
 
-	if !exists(handler.workingDir) {
-		slog.Error(fmt.Sprintf("Folder %q does not exist. Exiting...", handler.workingDir))
-		return
-	}
-
-	err := os.Chdir(handler.workingDir)
-	if err != nil {
-		slog.Error(fmt.Sprintf("Error changing working directory to %q: %s. Exiting...", handler.workingDir, err))
-		return
-	}
-
-	if !exists("./Original") {
-		err = os.Mkdir("./Original", 0755)
-		if err != nil {
-			slog.Error(fmt.Sprintf("Error creating Original folder: %s. Exiting...", err))
-			return
-		}
-		slog.Info("Created ./Original folder")
-	}
+	handler.initWorkspace()
 
 	for {
-		files, err := handler.getFiles()
+		files, err := getFiles(handler.workingDir)
 		if err != nil {
 			slog.Error(fmt.Sprintf("Error reading files from working directory: %q. Exiting...", err))
 			return

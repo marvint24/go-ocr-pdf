@@ -3,8 +3,8 @@ services:
     build: .
     container_name: go-ocr-pdf
     volumes:
-      - ./scan/:/data/
-      - ./languages/:/usr/share/tessdata/
+      - ./scan:/data
+      - ./languages:/languages
     environment:
       LOG_LEVEL: -4 # DEBUG (-4), INFO (0), WARN (4), and ERROR (8)
       SCAN_FOLDER: "subfolder/"

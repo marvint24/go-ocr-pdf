@@ -16,6 +16,6 @@ RUN apt install -y ocrmypdf
 COPY --from=build /go/app/ocrTool /app/ocrTool
 
 VOLUME [ "/data" ]
-VOLUME [ "/usr/share/tesseract-ocr/4.00/tessdata/" ]
+VOLUME [ "/languages" ]
 
 CMD [ "./ocrTool" ]
