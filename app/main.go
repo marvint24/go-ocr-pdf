@@ -45,12 +45,14 @@ func main() {
 	logLevel := getLogLevel()
 	slog.SetLogLoggerLevel(logLevel)
 
+	// Get environment variables
 	scanFolder := os.Getenv("SCAN_FOLDER")
 	scanInterval := readEnvInt("SCAN_INTERVAL", defaultScanInterval)
 	concurrentJobs := readEnvInt("CONCURRENT_JOBS", defaultConcurrentJobs)
 
 	slog.Info(fmt.Sprintf("Starting OCRTool with log level %d, scan folder %q, scan interval %d, and concurrent jobs %d", logLevel, scanFolder, scanInterval, concurrentJobs))
 
+	// Start the OCRShellHandler
 	ocrhandler := ocrhandler.New(path.Join(basePath, scanFolder), scanInterval, concurrentJobs)
 
 	ocrhandler.Start()

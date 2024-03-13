@@ -69,8 +69,9 @@ func (handler *OCRShellHandler) processFile(filename string) {
 }
 
 func executeOcrmypdf(languages string, oldPath string, newPath string) error {
-	cmd := exec.Command("ocrmypdf", "-l", languages, oldPath, newPath)
-	err := cmd.Run()
+	slog.Debug(fmt.Sprintf("Running: ocrmypdf -l %q %q %q", languages, oldPath, newPath))
+	out, err := exec.Command("ocrmypdf", "-l", languages, oldPath, newPath).Output()
+	slog.Debug(fmt.Sprintf("Output from ocrmypdf: %q", out))
 	if err != nil {
 		return err
 	}
