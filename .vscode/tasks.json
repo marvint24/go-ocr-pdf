@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "test pipeline with act",
+        "type": "shell",
+        "command": "act -W ./.gitea/workflows/release-new-version.yaml -e ./.gitea/workflows/testData.json",
+        "problemMatcher": []
+      }
+    ]
+  }

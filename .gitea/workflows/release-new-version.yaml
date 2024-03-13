@@ -1,0 +1,28 @@
+name: Build and release container image
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    container: docker:latest
+    if: ${{startsWith(github.event.ref, 'refs/tags/v')}}
+    steps:
+     - run: apk add --update --no-cache nodejs npm
+     - run: apk add --update --no-cache python3
+     - uses: actions/checkout@v4
+     - run: echo "IMAGE_NAME=${{github.event.repository.name}}" >> $GITHUB_ENV  #IMAGE_NAME
+     - run: python3 .gitea/workflows/py/getVersion.py >> $GITHUB_ENV            #VERSION
+     - run: python3 .gitea/workflows/py/getURL.py >> $GITHUB_ENV                #URL
+     - run: echo "Building and pushing image $IMAGE_NAME:$VERSION"
+     - run: docker login $URL -u $GITHUB_REPOSITORY_OWNER -p ${{secrets.REGISTRY_TOKEN}}
+     - run: docker build -t $URL/$GITHUB_REPOSITORY_OWNER/$IMAGE_NAME:$VERSION -t $URL/$GITHUB_REPOSITORY_OWNER/$IMAGE_NAME:latest .
+     - run: docker push -a $URL/$GITHUB_REPOSITORY_OWNER/$IMAGE_NAME
+
+  no-build-and-release-needed:
+    runs-on: ubuntu-latest
+    if: ${{!startsWith(github.event.ref, 'refs/tags/v')}}
+    steps:
+       - run: echo "No build and release needed"
