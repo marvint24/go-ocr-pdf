@@ -1,6 +1,7 @@
 package ocrHandler
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log/slog"
@@ -70,10 +71,15 @@ func (handler *OCRShellHandler) processFile(filename string) {
 
 func executeOcrmypdf(languages string, oldPath string, newPath string) error {
 	slog.Debug(fmt.Sprintf("Running: ocrmypdf -l %q %q %q", languages, oldPath, newPath))
-	out, err := exec.Command("ocrmypdf", "-l", languages, oldPath, newPath).Output()
-	slog.Debug(fmt.Sprintf("Output from ocrmypdf: %q", out))
+	cmd := exec.Command("ocrmypdf", "-l", languages, oldPath, newPath)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	slog.Debug(fmt.Sprintf("Output (stdout) from ocrmypdf: %q", stdout.String()))
+
 	if err != nil {
-		return err
+		return fmt.Errorf("executeOcrmypdf error: \nOriginal err: %s,\nOutput (stderr) from ocrmypdf: %s", err, stderr.String())
 	}
 	return nil
 }
