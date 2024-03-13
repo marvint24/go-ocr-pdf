@@ -38,10 +38,10 @@ func (handler *OCRShellHandler) initWorkspace() {
 	for _, file := range languageFiles {
 		source := fmt.Sprintf("%s/%s", languagesFolder, file)
 		destination := fmt.Sprintf("%s/%s", targetFolder, file)
-		slog.Info(fmt.Sprintf("Moving language file %q to %q", source, destination))
+		slog.Info(fmt.Sprintf("Copying language file %q to %q", source, destination))
 		err = copyFile(source, destination)
 		if err != nil {
-			slog.Error(fmt.Sprintf("Error moving language file %q to %q: %s.", source, destination, err))
+			slog.Error(fmt.Sprintf("Error copying language file %q to %q: %s.", source, destination, err))
 		}
 	}
 
