@@ -6,11 +6,12 @@ WORKDIR /go/app
 RUN go mod download
 RUN go build .
 
-FROM alpine:latest
+FROM ubuntu:latest	
 
 WORKDIR /app
 
-RUN apk add ocrmypdf --no-cache
+RUN apt update
+RUN apt install -y ocrmypdf
 
 COPY --from=build /go/app/ocrTool /app/ocrTool
 
