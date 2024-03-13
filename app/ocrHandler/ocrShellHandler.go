@@ -38,11 +38,11 @@ func (handler *OCRShellHandler) processFile(filename string) {
 
 	languages, newName := extractLanguages(filename)
 	if exists(newName) {
-		slog.Error(fmt.Sprintf("File %q already exists. Skipping...", newName))
+		slog.Warn(fmt.Sprintf("File %q already exists. Skipping...", newName))
 		return
 	}
 	if exists(fmt.Sprintf("./Original/%s", filename)) {
-		slog.Error(fmt.Sprintf("Original File %q already exists. Skipping...", newName))
+		slog.Warn(fmt.Sprintf("Original File %q already exists. Skipping...", newName))
 		return
 	}
 
